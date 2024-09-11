@@ -1,5 +1,5 @@
 import './App.css';
-import Label from './components/Label';
+import Label from './components/Label/Label';
 
 function App() {
   return (
