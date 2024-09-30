@@ -1,0 +1,10 @@
+.container {
+  width: 600px;
+  height: 300px;
+}
+
+.title {
+  background-color: tomato;
+  padding: 10px;
+  color: #fff;
+}
