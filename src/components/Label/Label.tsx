@@ -1,21 +1,12 @@
 import { ReactNode } from 'react';
 
-interface ComponentTypes {
+interface ComponentTypes extends React.LabelHTMLAttributes<HTMLLabelElement> {
   asChild?: boolean;
-  htmlFor: string;
   children: ReactNode;
-  className?: string;
 }
 
-//TODO: asChild 추가하고, slot 컴포넌트 먼저 구성(const component = asChild ? 'label' : Slot)
-const LabelRoot = ({ asChild = false, htmlFor, children, className }: ComponentTypes) => {
-  return asChild ? (
-    <div>{children}</div>
-  ) : (
-    <label className={className} htmlFor={htmlFor}>
-      {children}
-    </label>
-  );
+const LabelRoot = ({ asChild = false, children, ...props }: ComponentTypes) => {
+  return <label {...props}>{children}</label>;
 };
 
 const Label = {
