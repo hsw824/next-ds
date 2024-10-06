@@ -1,57 +1,29 @@
-import Root from './components/Accordion/index';
-
-const data = [
-  {
-    id: '1',
-    title: 'title1',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-  {
-    id: '2',
-    title: 'title2',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-  {
-    id: '3',
-    title: 'title3',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-  {
-    id: '4',
-    title: 'title4',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-  {
-    id: '5',
-    title: 'title5',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-  {
-    id: '6',
-    title: 'title6',
-    content:
-      't is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ',
-  },
-];
+import Form from './components/Form';
 
 function App() {
   return (
     <div>
-      <Root type="single">
-        {data.map((item) => {
-          return (
-            <Root.Item key={item.id}>
-              <Root.Trigger id={item.id}>{item.title}</Root.Trigger>
-              <Root.Content id={item.id}>{item.content}</Root.Content>
-            </Root.Item>
-          );
-        })}
-      </Root>
+      <Form noValidate>
+        <Form.Field name="email">
+          <Form.Label>이메일</Form.Label>
+          <Form.Control asChild>
+            <input type="text" required pattern="[0-9]{8}" />
+          </Form.Control>
+          <Form.Message match="valueMissing" />
+          <Form.Message match="patternMismatch">형식이 맞지 않습니다. 생년월일 8자로 적어주세요 yyyymmdd</Form.Message>
+        </Form.Field>
+        <Form.Field name="password">
+          <Form.Label>비밀번호</Form.Label>
+          <Form.Control asChild>
+            <input type="number" step={0.5} required min={10} max={100} />
+          </Form.Control>
+          <Form.Message match="valueMissing" />
+          <Form.Message match="stepMismatch">유효한 값은 0.5 단위입니다.</Form.Message>
+          <Form.Message match="rangeUnderflow">10보다 작으면 안됩니다.</Form.Message>
+          <Form.Message match="rangeOverflow">100보다 크면 안됩니다.</Form.Message>
+        </Form.Field>
+        <Form.Button>클릭</Form.Button>
+      </Form>
     </div>
   );
 }
