@@ -1,7 +1,7 @@
 import './index.css';
 
-import { ReactNode, createContext, useContext, useState } from 'react';
-
+import { ReactNode, useState } from 'react';
+import createContext from '../../utils/createContext';
 interface DataType {
   id: number;
   title: string;
@@ -24,15 +24,15 @@ interface ButtonType {
   title: string;
 }
 
-const TabMenuContext = createContext<ContextType | null>(null);
+const [Provider, useContext] = createContext<ContextType>('tab-context', null);
 
 const TabMenuContainer = ({ children, data }: ContainerType) => {
   const [currentIndex, setCurrentIndex] = useState(data[0].id);
 
   return (
-    <TabMenuContext.Provider value={{ data, currentIndex, setCurrentIndex }}>
+    <Provider contextValue={{ data, currentIndex, setCurrentIndex }}>
       <div className="tab-container">{children}</div>
-    </TabMenuContext.Provider>
+    </Provider>
   );
 };
 
@@ -41,7 +41,7 @@ const TabButtons = ({ children }: { children: ReactNode }) => {
 };
 
 const TabButton = ({ id, title }: ButtonType) => {
-  const tabContext = useContext(TabMenuContext);
+  const tabContext = useContext();
   const { currentIndex, setCurrentIndex } = tabContext as ContextType;
 
   return (
@@ -58,7 +58,7 @@ const TabButton = ({ id, title }: ButtonType) => {
 };
 
 const TabContent = () => {
-  const tabContext = useContext(TabMenuContext);
+  const tabContext = useContext();
   const { currentIndex, data } = tabContext as ContextType;
   const currentItem = data.find((item) => item.id === currentIndex);
   return <div className="tab-content">{currentItem!.description}</div>;

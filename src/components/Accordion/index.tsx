@@ -1,18 +1,7 @@
 import './index.css';
-import { createContext, ReactNode, useContext, useState } from 'react';
-
-interface MultipleContextType {
-  selectedList: string[];
-  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>;
-}
-
-interface SingleContextType {
-  currentId: string | null;
-  setCurrentId: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-const MultipleContext = createContext<MultipleContextType | null>(null);
-const SingleContext = createContext<SingleContextType | null>(null);
+import { ReactNode, useState } from 'react';
+import { MultipleProvider, useMultipleContext } from './MutipleContext';
+import { SingleProvider, useSingleContext } from './SingleContext';
 
 const Root = ({ children, type }: { children: ReactNode; type: 'single' | 'multiple' }) => {
   if (type === 'single') {
@@ -25,18 +14,18 @@ const SingleAccordion = ({ children }: { children: ReactNode }) => {
   const [currentId, setCurrentId] = useState<string | null>(null);
 
   return (
-    <SingleContext.Provider value={{ currentId, setCurrentId }}>
+    <SingleProvider contextValue={{ currentId, setCurrentId }}>
       <div className="container">{children}</div>
-    </SingleContext.Provider>
+    </SingleProvider>
   );
 };
 
 const MultipleAccordion = ({ children }: { children: ReactNode }) => {
   const [selectedList, setSelectedList] = useState<string[]>([]);
   return (
-    <MultipleContext.Provider value={{ selectedList, setSelectedList }}>
+    <MultipleProvider contextValue={{ selectedList, setSelectedList }}>
       <div className="container">{children}</div>
-    </MultipleContext.Provider>
+    </MultipleProvider>
   );
 };
 
@@ -45,8 +34,8 @@ const Item = ({ children }: { children: ReactNode }) => {
 };
 
 const Trigger = ({ children, id }: { children: ReactNode; id: string }) => {
-  const singleContext = useContext(SingleContext);
-  const multipleContext = useContext(MultipleContext);
+  const singleContext = useSingleContext();
+  const multipleContext = useMultipleContext();
 
   const handleSingleToggle = () => {
     if (!singleContext) return;
@@ -73,10 +62,10 @@ const Trigger = ({ children, id }: { children: ReactNode; id: string }) => {
 };
 
 const Content = ({ children, id }: { children: ReactNode; id: string }) => {
-  const singleContext = useContext(SingleContext);
-  const multipleContext = useContext(MultipleContext);
+  const singleContext = useSingleContext();
+  const multipleContext = useMultipleContext();
 
-  const isOpen = singleContext ? singleContext.currentId === id : multipleContext?.selectedList.includes(id);
+  const isOpen = singleContext ? singleContext.currentId === id : multipleContext.selectedList.includes(id);
 
   return (
     <div

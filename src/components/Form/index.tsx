@@ -1,6 +1,7 @@
-import { createContext, forwardRef, useContext, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Primitive } from '../Primitive';
 
+import createContext from '../../utils/createContext';
 interface BaseComponentType {
   asChild?: boolean;
 }
@@ -62,13 +63,7 @@ const validityMatchers = [
 
 type ValidityMatcher = (typeof validityMatchers)[number];
 
-const FieldContext = createContext<FieldContextType | null>(null);
-
-const useFieldContext = () => {
-  const fieldContext = useContext(FieldContext);
-  if (!fieldContext) throw new Error('context error');
-  return fieldContext;
-};
+const [Provider, useContext] = createContext<FieldContextType>('form-field');
 
 const Form = forwardRef<HTMLFormElement, FormType>(({ children, onSubmit, ...props }, ref) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,16 +99,16 @@ const Field = forwardRef<HTMLDivElement, FieldType>(({ children, name, ...props 
     valid: false,
   });
   return (
-    <FieldContext.Provider value={{ name, validityObj, setValidityObj }}>
+    <Provider contextValue={{ name, validityObj, setValidityObj }}>
       <Primitive.div ref={ref} {...props}>
         {children}
       </Primitive.div>
-    </FieldContext.Provider>
+    </Provider>
   );
 });
 
 const Label = forwardRef<HTMLLabelElement, LabelType>(({ children, ...props }, ref) => {
-  const { name } = useFieldContext();
+  const { name } = useContext();
   return (
     <Primitive.label ref={ref} {...props} htmlFor={name}>
       {children}
@@ -122,7 +117,7 @@ const Label = forwardRef<HTMLLabelElement, LabelType>(({ children, ...props }, r
 });
 
 const Control = forwardRef<HTMLInputElement, ControlType>((props, ref) => {
-  const { name, setValidityObj } = useFieldContext();
+  const { name, setValidityObj } = useContext();
   const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     const currentTarget = e.currentTarget;
 
@@ -145,7 +140,7 @@ const Control = forwardRef<HTMLInputElement, ControlType>((props, ref) => {
 
 const Message = forwardRef<HTMLSpanElement, MessageType>((props, ref) => {
   const { children, match, ...messageProps } = props;
-  const { validityObj } = useFieldContext();
+  const { validityObj } = useContext();
 
   const DEFAULT_INVALID_MESSAGE = '유효하지 않은 값입니다.';
   const DEFAULT_BUILT_IN_MESSAGES: Record<ValidityMatcher, string | undefined> = {
