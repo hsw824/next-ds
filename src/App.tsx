@@ -41,13 +41,26 @@ const data = [
 
 function App() {
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <Root type="single">
         {data.map((item) => {
           return (
             <Root.Item key={item.id}>
               <Root.Trigger id={item.id}>{item.title}</Root.Trigger>
               <Root.Content id={item.id}>{item.content}</Root.Content>
+            </Root.Item>
+          );
+        })}
+      </Root>
+
+      <Root type="multiple" style={{ marginLeft: '20px' }}>
+        {data.map((item) => {
+          return (
+            <Root.Item key={item.id}>
+              <Root.Trigger id={item.id}>{item.title}</Root.Trigger>
+              <Root.Content id={item.id} className="aa">
+                {item.content}
+              </Root.Content>
             </Root.Item>
           );
         })}
