@@ -1,13 +1,18 @@
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
+import { Primitive } from '../Primitive';
 
 interface ComponentTypes extends React.LabelHTMLAttributes<HTMLLabelElement> {
   asChild?: boolean;
   children: ReactNode;
 }
 
-const LabelRoot = ({ asChild = false, children, ...props }: ComponentTypes) => {
-  return <label {...props}>{children}</label>;
-};
+const LabelRoot = forwardRef<HTMLLabelElement, ComponentTypes>(({ asChild = false, children, ...props }, ref) => {
+  return (
+    <Primitive.label ref={ref} {...props}>
+      {children}
+    </Primitive.label>
+  );
+});
 
 const Label = {
   Root: LabelRoot,

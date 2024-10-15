@@ -1,97 +1,101 @@
 import './index.css';
-import { createContext, ReactNode, useContext, useState } from 'react';
-
-interface MultipleContextType {
-  selectedList: string[];
-  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>;
+import { ReactNode, forwardRef, useState } from 'react';
+import createContext from '../../utils/createContext';
+import { Primitive } from '../Primitive';
+interface RootComponentType extends React.HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  type: 'single' | 'multiple';
 }
 
-interface SingleContextType {
+interface ItemPropsType extends React.HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+}
+
+interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+  id: string;
+}
+
+interface SingleAccordionType {
   currentId: string | null;
   setCurrentId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const MultipleContext = createContext<MultipleContextType | null>(null);
-const SingleContext = createContext<SingleContextType | null>(null);
+interface MultipleAccordionType {
+  selectedList: string[];
+  setSelectedList: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
-const Root = ({ children, type }: { children: ReactNode; type: 'single' | 'multiple' }) => {
-  if (type === 'single') {
-    return <SingleAccordion>{children}</SingleAccordion>;
-  }
-  return <MultipleAccordion>{children}</MultipleAccordion>;
+type AccordionContextType = SingleAccordionType | MultipleAccordionType;
+
+type AccordionComponentType = React.ForwardRefExoticComponent<
+  RootComponentType & React.RefAttributes<HTMLDivElement>
+> & {
+  Item: React.ForwardRefExoticComponent<ItemPropsType & React.RefAttributes<HTMLDivElement>>;
+  Trigger: React.ForwardRefExoticComponent<AccordionItemProps & React.RefAttributes<HTMLDivElement>>;
+  Content: React.ForwardRefExoticComponent<AccordionItemProps & React.RefAttributes<HTMLDivElement>>;
 };
 
-const SingleAccordion = ({ children }: { children: ReactNode }) => {
+const [Provider, useContext] = createContext<AccordionContextType>('accordion', null);
+
+const Root = forwardRef<HTMLDivElement, RootComponentType>(({ children, type, ...props }, ref) => {
   const [currentId, setCurrentId] = useState<string | null>(null);
-
-  return (
-    <SingleContext.Provider value={{ currentId, setCurrentId }}>
-      <div className="container">{children}</div>
-    </SingleContext.Provider>
-  );
-};
-
-const MultipleAccordion = ({ children }: { children: ReactNode }) => {
   const [selectedList, setSelectedList] = useState<string[]>([]);
+
+  const contextValue: AccordionContextType =
+    type === 'single' ? { currentId, setCurrentId } : { selectedList, setSelectedList };
   return (
-    <MultipleContext.Provider value={{ selectedList, setSelectedList }}>
-      <div className="container">{children}</div>
-    </MultipleContext.Provider>
+    <Provider contextValue={contextValue}>
+      <Primitive.div className="container" {...props} ref={ref}>
+        {children}
+      </Primitive.div>
+    </Provider>
   );
-};
+}) as AccordionComponentType;
 
-const Item = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>;
-};
+const Item = forwardRef<HTMLDivElement, ItemPropsType>(({ children, ...props }, ref) => {
+  return (
+    <Primitive.div ref={ref} {...props}>
+      {children}
+    </Primitive.div>
+  );
+});
 
-const Trigger = ({ children, id }: { children: ReactNode; id: string }) => {
-  const singleContext = useContext(SingleContext);
-  const multipleContext = useContext(MultipleContext);
-
-  const handleSingleToggle = () => {
-    if (!singleContext) return;
-    const { setCurrentId } = singleContext;
-    setCurrentId((prev) => (prev === id ? null : id));
-  };
-
-  const handleMultiToggle = () => {
-    if (!multipleContext) return;
-    const { selectedList, setSelectedList } = multipleContext;
-    const open = selectedList.includes(id);
-    setSelectedList(open ? selectedList.filter((item) => item !== id) : [...selectedList, id]);
-  };
+const Trigger = forwardRef<HTMLDivElement, AccordionItemProps>(({ children, id, ...props }, ref) => {
+  const context = useContext();
 
   const handleToggle = () => {
-    if (singleContext) return handleSingleToggle();
-    handleMultiToggle();
+    if ('currentId' in context) {
+      context.setCurrentId((prev) => (prev === id ? null : id));
+    } else {
+      context.setSelectedList((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    }
   };
   return (
-    <div className="title" onClick={handleToggle}>
+    <Primitive.div className="title" onClick={handleToggle} ref={ref} {...props}>
       {children}
-    </div>
+    </Primitive.div>
   );
-};
+});
 
-const Content = ({ children, id }: { children: ReactNode; id: string }) => {
-  const singleContext = useContext(SingleContext);
-  const multipleContext = useContext(MultipleContext);
+const Content = forwardRef<HTMLDivElement, AccordionItemProps>((props, ref) => {
+  const { children, id, style, ...contentProps } = props;
 
-  const isOpen = singleContext ? singleContext.currentId === id : multipleContext?.selectedList.includes(id);
+  const context = useContext();
+  const isOpen = 'currentId' in context ? context.currentId === id : context.selectedList.includes(id);
 
+  const basicStyle: React.CSSProperties = {
+    overflowY: 'hidden',
+    maxHeight: isOpen ? '100vh' : '0',
+    transition: 'all 0.3s',
+  };
+  const mergeStyle = style ? { ...style, ...basicStyle } : basicStyle;
   return (
-    <div
-      role="button"
-      className="content"
-      style={{
-        overflowY: 'hidden',
-        maxHeight: isOpen ? '100vh' : '0',
-        transition: 'all 0.3s',
-      }}
-    >
+    <Primitive.div role="button" className="content" style={mergeStyle} ref={ref} {...contentProps}>
       {children}
-    </div>
+    </Primitive.div>
   );
-};
+});
 
 Root.Item = Item;
 Root.Trigger = Trigger;
