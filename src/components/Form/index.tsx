@@ -1,45 +1,31 @@
-import { createContext, forwardRef, useContext, useState } from 'react';
+import { createContext, forwardRef, useContext, useState, PropsWithChildren } from 'react';
 import { Primitive } from '../Primitive';
 
 interface BaseComponentType {
   asChild?: boolean;
 }
 
-interface WithChildrenProps {
-  children: React.ReactNode;
-}
+type FormType = PropsWithChildren<BaseComponentType & React.FormHTMLAttributes<HTMLFormElement>>;
 
-interface WithOptionalChildrenProps {
-  children?: React.ReactNode;
-}
+type FieldType = PropsWithChildren<
+  BaseComponentType &
+    React.HTMLAttributes<HTMLDivElement> & {
+      name: string;
+    }
+>;
 
-type FormType = BaseComponentType & WithChildrenProps & React.FormHTMLAttributes<HTMLFormElement>;
+type LabelType = PropsWithChildren<BaseComponentType & React.LabelHTMLAttributes<HTMLLabelElement>>;
 
-type FieldType = BaseComponentType &
-  WithChildrenProps &
-  React.HTMLAttributes<HTMLDivElement> & {
-    name: string;
-  };
+type ControlType = PropsWithChildren<BaseComponentType & React.InputHTMLAttributes<HTMLInputElement>>;
 
-type LabelType = BaseComponentType & WithChildrenProps & React.LabelHTMLAttributes<HTMLLabelElement>;
+type MessageType = PropsWithChildren<
+  BaseComponentType &
+    React.HTMLAttributes<HTMLSpanElement> & {
+      match: ValidityMatcher;
+    }
+>;
 
-type ControlType = BaseComponentType & WithOptionalChildrenProps & React.InputHTMLAttributes<HTMLInputElement>;
-
-type MessageType = BaseComponentType &
-  WithOptionalChildrenProps &
-  React.HTMLAttributes<HTMLSpanElement> & {
-    match: ValidityMatcher;
-  };
-
-type FormComponent = React.ForwardRefExoticComponent<FormType & React.RefAttributes<HTMLFormElement>> & {
-  Field: React.ForwardRefExoticComponent<FieldType & React.RefAttributes<HTMLDivElement>>;
-  Label: React.ForwardRefExoticComponent<LabelType & React.RefAttributes<HTMLLabelElement>>;
-  Control: React.ForwardRefExoticComponent<ControlType & React.RefAttributes<HTMLInputElement>>;
-  Message: React.ForwardRefExoticComponent<MessageType & React.RefAttributes<HTMLSpanElement>>;
-  Button: React.ForwardRefExoticComponent<ButtonType & React.RefAttributes<HTMLButtonElement>>;
-};
-
-type ButtonType = BaseComponentType & WithChildrenProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonType = PropsWithChildren<BaseComponentType & React.ButtonHTMLAttributes<HTMLButtonElement>>;
 interface FieldContextType {
   name: string;
   validityObj: ValidityState;
@@ -62,6 +48,21 @@ const validityMatchers = [
 
 type ValidityMatcher = (typeof validityMatchers)[number];
 
+const DEFAULT_INVALID_MESSAGE = '유효하지 않은 값입니다.';
+const DEFAULT_BUILT_IN_MESSAGES: Record<ValidityMatcher, string | undefined> = {
+  badInput: DEFAULT_INVALID_MESSAGE,
+  customError: '',
+  patternMismatch: '패턴이 맞지 않습니다.',
+  rangeOverflow: '값이 기준값보다 크면 안됩니다.',
+  rangeUnderflow: '값이 기준값보다 작으면 안됩니다.',
+  stepMismatch: '유효한 값으로 맞춰주세요.',
+  tooLong: '입력값이 너무 깁니다.',
+  tooShort: '입력값이 너무 짧습니다.',
+  valid: undefined,
+  valueMissing: '필수값 입니다.',
+  typeMismatch: '형식에 맞게 작성해 주세요.',
+};
+
 const FieldContext = createContext<FieldContextType | null>(null);
 
 const useFieldContext = () => {
@@ -77,17 +78,14 @@ const Form = forwardRef<HTMLFormElement, FormType>(({ children, onSubmit, ...pro
     const isValid = form.checkValidity();
 
     if (!isValid) return;
-
-    if (onSubmit) {
-      onSubmit(event);
-    }
+    onSubmit?.(event);
   };
   return (
     <Primitive.form ref={ref} {...props} onSubmit={handleSubmit}>
       {children}
     </Primitive.form>
   );
-}) as FormComponent;
+});
 
 const Field = forwardRef<HTMLDivElement, FieldType>(({ children, name, ...props }, ref) => {
   const [validityObj, setValidityObj] = useState<ValidityState>({
@@ -126,7 +124,7 @@ const Control = forwardRef<HTMLInputElement, ControlType>((props, ref) => {
   const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
     const currentTarget = e.currentTarget;
 
-    const updateValidity = validityMatchers.reduce(
+    const updatedValidity = validityMatchers.reduce(
       (prevValidityState, key) => {
         prevValidityState[key] = currentTarget.validity[key];
         return prevValidityState;
@@ -136,7 +134,7 @@ const Control = forwardRef<HTMLInputElement, ControlType>((props, ref) => {
 
     setValidityObj((prevState) => ({
       ...prevState,
-      ...updateValidity,
+      ...updatedValidity,
     }));
   };
 
@@ -147,20 +145,6 @@ const Message = forwardRef<HTMLSpanElement, MessageType>((props, ref) => {
   const { children, match, ...messageProps } = props;
   const { validityObj } = useFieldContext();
 
-  const DEFAULT_INVALID_MESSAGE = '유효하지 않은 값입니다.';
-  const DEFAULT_BUILT_IN_MESSAGES: Record<ValidityMatcher, string | undefined> = {
-    badInput: DEFAULT_INVALID_MESSAGE,
-    customError: '',
-    patternMismatch: '패턴이 맞지 않습니다.',
-    rangeOverflow: '값이 기준값보다 크면 안됩니다.',
-    rangeUnderflow: '값이 기준값보다 작으면 안됩니다.',
-    stepMismatch: '유효한 값으로 맞춰주세요.',
-    tooLong: '입력값이 너무 깁니다.',
-    tooShort: '입력값이 너무 짧습니다.',
-    valid: undefined,
-    valueMissing: '필수값 입니다.',
-    typeMismatch: '형식에 맞게 작성해 주세요.',
-  };
   if (match && validityObj[match]) {
     const builtMessage = DEFAULT_BUILT_IN_MESSAGES[match];
     return (
@@ -172,7 +156,7 @@ const Message = forwardRef<HTMLSpanElement, MessageType>((props, ref) => {
   if (match === 'valid') {
     return (
       <Primitive.span ref={ref} {...messageProps}>
-        {children ? children : DEFAULT_INVALID_MESSAGE}
+        {children ?? DEFAULT_INVALID_MESSAGE}
       </Primitive.span>
     );
   }
@@ -187,10 +171,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonType>(({ children, ...props }
   );
 });
 
-Form.Field = Field;
-Form.Label = Label;
-Form.Control = Control;
-Form.Message = Message;
-Form.Button = Button;
-
-export default Form;
+export default Object.assign(Form, {
+  Field,
+  Label,
+  Control,
+  Message,
+  Button,
+});
