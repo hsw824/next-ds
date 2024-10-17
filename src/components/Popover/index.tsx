@@ -1,62 +1,67 @@
 import PortalRoot from '../../utils/CreatePortal';
-import { forwardRef } from 'react';
+import createContext from '../../utils/createContext';
+
+import { forwardRef, PropsWithChildren, useState } from 'react';
 import { Primitive } from '../Primitive';
-interface PopoverRootType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
 
-interface TriggerType extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-interface PortalType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+type PopoverRootType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
+type TriggerType = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>;
+type PortalType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
   container?: Element | null;
-}
-
-interface ContentType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
-
-type PopoverComponentType = React.ForwardRefExoticComponent<PopoverRootType & React.RefAttributes<HTMLDivElement>> & {
-  Trigger: React.ForwardRefExoticComponent<TriggerType & React.RefAttributes<HTMLButtonElement>>;
-  Portal: React.FC<PortalType>;
-  Content: React.ForwardRefExoticComponent<ContentType & React.RefAttributes<HTMLDivElement>>;
 };
+type ContentType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
 
-const PopoverRoot = forwardRef<HTMLDivElement, PopoverRootType>(
-  // TODO:context api를 써서 그 클릭했을때 저게 보이게 해야할듯
-  ({ children, ...props }, ref) => {
-    return (
-      <Primitive.div ref={ref} {...props}>
+interface ContextType {
+  toggle: boolean;
+  handleToggle: () => void;
+}
+const [Provider, useContext] = createContext<ContextType>('popover');
+
+const Popover = forwardRef<HTMLDivElement, PopoverRootType>(({ children, ...props }, ref) => {
+  const [toggle, setToggle] = useState(false);
+  const handleToggle = () => {
+    setToggle((prev) => !prev);
+  };
+
+  return (
+    <Provider contextValue={{ toggle, handleToggle }}>
+      <Primitive.div ref={ref} {...props} onClick={() => setToggle(false)}>
         {children}
       </Primitive.div>
-    );
-  },
-) as PopoverComponentType;
+    </Provider>
+  );
+});
 
 const Trigger = forwardRef<HTMLButtonElement, TriggerType>(({ children, ...props }, ref) => {
+  const { handleToggle } = useContext();
+
+  const handleClickTrigger = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleToggle();
+  };
   return (
-    <Primitive.button {...props} ref={ref}>
+    <Primitive.button {...props} ref={ref} onClick={(e) => handleClickTrigger(e)}>
       {children}
     </Primitive.button>
   );
 });
 
 const Portal = ({ children, container }: PortalType) => {
-  return <PortalRoot container={container}>{children}</PortalRoot>;
+  const { toggle } = useContext();
+
+  return toggle && <PortalRoot container={container}>{children}</PortalRoot>;
 };
 
 const Content = forwardRef<HTMLDivElement, ContentType>(({ children, ...props }, ref) => {
   return (
-    <Primitive.div {...props} ref={ref}>
+    <Primitive.div {...props} ref={ref} onClick={(e) => e.stopPropagation()}>
       {children}
     </Primitive.div>
   );
 });
 
-PopoverRoot.Trigger = Trigger;
-PopoverRoot.Portal = Portal;
-PopoverRoot.Content = Content;
-
-export default PopoverRoot;
+export default Object.assign(Popover, {
+  Trigger,
+  Portal,
+  Content,
+});
