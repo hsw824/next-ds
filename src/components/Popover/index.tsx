@@ -1,62 +1,89 @@
 import PortalRoot from '../../utils/CreatePortal';
-import { forwardRef } from 'react';
+import createContext from '../../utils/createContext';
+
+import { forwardRef, MutableRefObject, PropsWithChildren, useRef, useState } from 'react';
 import { Primitive } from '../Primitive';
-interface PopoverRootType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
+import ViewportContextProvider from '../../utils/viewportContext';
+import useStyleInView from '../../hooks/useStyleInView';
 
-interface TriggerType extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-}
-
-interface PortalType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+type PopoverRootType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
+type TriggerType = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>;
+type PortalType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> & {
   container?: Element | null;
+};
+type ContentType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
+
+interface ContextType {
+  toggle: boolean;
+  handleToggle: () => void;
+  wrapperRef: MutableRefObject<HTMLElement | null>;
 }
 
-interface ContentType extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
+// TODO: mergeRef, mergeClass, mergeStyle
 
-type PopoverComponentType = React.ForwardRefExoticComponent<PopoverRootType & React.RefAttributes<HTMLDivElement>> & {
-  Trigger: React.ForwardRefExoticComponent<TriggerType & React.RefAttributes<HTMLButtonElement>>;
-  Portal: React.FC<PortalType>;
-  Content: React.ForwardRefExoticComponent<ContentType & React.RefAttributes<HTMLDivElement>>;
+const menuPosition = {
+  top: 5,
+  bottom: 5,
+  left: 0,
+  right: 0,
 };
 
-const PopoverRoot = forwardRef<HTMLDivElement, PopoverRootType>(
-  // TODO:context api를 써서 그 클릭했을때 저게 보이게 해야할듯
-  ({ children, ...props }, ref) => {
-    return (
-      <Primitive.div ref={ref} {...props}>
-        {children}
-      </Primitive.div>
-    );
-  },
-) as PopoverComponentType;
+const [Provider, useContext] = createContext<ContextType>('popover');
+
+const Popover = forwardRef<HTMLDivElement, PopoverRootType>(({ children, ...props }) => {
+  const [toggle, setToggle] = useState(false);
+  const handleToggle = () => {
+    setToggle((prev) => !prev);
+  };
+  const wrapperRef = useRef(null);
+
+  return (
+    <ViewportContextProvider>
+      <Provider contextValue={{ toggle, handleToggle, wrapperRef }}>
+        <Primitive.div ref={wrapperRef} {...props} onClick={() => setToggle(false)}>
+          {children}
+        </Primitive.div>
+      </Provider>
+    </ViewportContextProvider>
+  );
+});
 
 const Trigger = forwardRef<HTMLButtonElement, TriggerType>(({ children, ...props }, ref) => {
+  const { handleToggle } = useContext();
+
+  const handleClickTrigger = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleToggle();
+  };
   return (
-    <Primitive.button {...props} ref={ref}>
+    <Primitive.button {...props} ref={ref} onClick={(e) => handleClickTrigger(e)}>
       {children}
     </Primitive.button>
   );
 });
 
 const Portal = ({ children, container }: PortalType) => {
-  return <PortalRoot container={container}>{children}</PortalRoot>;
+  const { toggle } = useContext();
+  return toggle && <PortalRoot container={container}>{children}</PortalRoot>;
 };
 
-const Content = forwardRef<HTMLDivElement, ContentType>(({ children, ...props }, ref) => {
+const Content = forwardRef<HTMLDivElement, ContentType>(({ children, ...props }) => {
+  const { style, ...contentProps } = props;
+  const { wrapperRef } = useContext();
+
+  const targetRef = useRef(null);
+
+  const rectStyle = useStyleInView(wrapperRef, targetRef, menuPosition, 'absolute');
+  const mergedStyle = { ...style, ...rectStyle };
   return (
-    <Primitive.div {...props} ref={ref}>
+    <Primitive.div {...contentProps} style={mergedStyle} ref={targetRef} onClick={(e) => e.stopPropagation()}>
       {children}
     </Primitive.div>
   );
 });
 
-PopoverRoot.Trigger = Trigger;
-PopoverRoot.Portal = Portal;
-PopoverRoot.Content = Content;
-
-export default PopoverRoot;
+export default Object.assign(Popover, {
+  Trigger,
+  Portal,
+  Content,
+});
