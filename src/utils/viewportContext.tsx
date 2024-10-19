@@ -22,8 +22,6 @@ const subscribe = (callback: () => void) => {
 };
 
 const getViewportRect = () => {
-  console.log('실행');
-
   let stored = DefaultRect;
   return () => {
     const elem = typeof document !== 'undefined' && document.scrollingElement;
@@ -48,4 +46,4 @@ const ViewportContextProvider = ({ children }: { children: ReactNode }) => {
 
 export default ViewportContextProvider;
 
-export const useViewportContext = useContext(ViewportContext);
+export const useViewportRect = () => useContext(ViewportContext);
