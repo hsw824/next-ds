@@ -50,5 +50,11 @@
     "extends": [
       "plugin:storybook/recommended"
     ]
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --ext .tsx --ext .ts src/",
+      "prettier --write"
+    ]
   }
 }
