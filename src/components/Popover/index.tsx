@@ -1,10 +1,11 @@
 import PortalRoot from '../../utils/CreatePortal';
 import createContext from '../../utils/createContext';
+import ViewportContextProvider from '../../utils/viewportContext';
+import useStyleInView from '../../hooks/useStyleInView';
+import useOnclickOutside from '../../hooks/useOnclickOutside';
 
 import { forwardRef, MutableRefObject, PropsWithChildren, useRef, useState } from 'react';
 import { Primitive } from '../Primitive';
-import ViewportContextProvider from '../../utils/viewportContext';
-import useStyleInView from '../../hooks/useStyleInView';
 
 type PopoverRootType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
 type TriggerType = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>;
@@ -15,7 +16,7 @@ type ContentType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
 
 interface ContextType {
   toggle: boolean;
-  handleToggle: () => void;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   wrapperRef: MutableRefObject<HTMLElement | null>;
 }
 
@@ -32,15 +33,13 @@ const [Provider, useContext] = createContext<ContextType>('popover');
 
 const Popover = forwardRef<HTMLDivElement, PopoverRootType>(({ children, ...props }) => {
   const [toggle, setToggle] = useState(false);
-  const handleToggle = () => {
-    setToggle((prev) => !prev);
-  };
+
   const wrapperRef = useRef(null);
 
   return (
     <ViewportContextProvider>
-      <Provider contextValue={{ toggle, handleToggle, wrapperRef }}>
-        <Primitive.div ref={wrapperRef} {...props} onClick={() => setToggle(false)}>
+      <Provider contextValue={{ toggle, setToggle, wrapperRef }}>
+        <Primitive.div ref={wrapperRef} {...props}>
           {children}
         </Primitive.div>
       </Provider>
@@ -49,14 +48,10 @@ const Popover = forwardRef<HTMLDivElement, PopoverRootType>(({ children, ...prop
 });
 
 const Trigger = forwardRef<HTMLButtonElement, TriggerType>(({ children, ...props }, ref) => {
-  const { handleToggle } = useContext();
+  const { setToggle } = useContext();
 
-  const handleClickTrigger = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    handleToggle();
-  };
   return (
-    <Primitive.button {...props} ref={ref} onClick={(e) => handleClickTrigger(e)}>
+    <Primitive.button {...props} ref={ref} onClick={() => setToggle((prev) => !prev)}>
       {children}
     </Primitive.button>
   );
@@ -69,14 +64,15 @@ const Portal = ({ children, container }: PortalType) => {
 
 const Content = forwardRef<HTMLDivElement, ContentType>(({ children, ...props }) => {
   const { style, ...contentProps } = props;
-  const { wrapperRef } = useContext();
+  const { wrapperRef, setToggle } = useContext();
 
   const targetRef = useRef(null);
-
   const rectStyle = useStyleInView(wrapperRef, targetRef, menuPosition, 'absolute');
   const mergedStyle = { ...style, ...rectStyle };
+  useOnclickOutside(targetRef, () => setToggle(false));
+
   return (
-    <Primitive.div {...contentProps} style={mergedStyle} ref={targetRef} onClick={(e) => e.stopPropagation()}>
+    <Primitive.div {...contentProps} style={mergedStyle} ref={targetRef}>
       {children}
     </Primitive.div>
   );
