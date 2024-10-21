@@ -1,0 +1,6 @@
+packages:
+  # include packages in sub-folders (e.g. apps/ and packages/)
+  # app - client, admin, storybook
+  # packages - config, ui
+  - 'apps/*'
+  - 'packages/*'
