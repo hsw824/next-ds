@@ -1,7 +1,17 @@
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import eslint from '@eslint/js';
+import eslint from '@eslint/js';
 import pluginReact from 'eslint-plugin-react';
+import pluginReactHook from 'eslint-plugin-react-hooks';
+
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
+export default tseslint.config(
+  {
+    ignores: ['node_modules', 'dist'],
+  },
+  eslint.configs.recommended,
 import pluginReactHook from 'eslint-plugin-react-hooks';
 
 import eslintPluginPrettier from 'eslint-plugin-prettier';
