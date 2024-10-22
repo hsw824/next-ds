@@ -17,7 +17,7 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
     plugins: {
       react: pluginReact,
-      'react-hook': pluginReactHook,
+      pluginReactHook,
       prettier: eslintPluginPrettier,
     },
     rules: {
