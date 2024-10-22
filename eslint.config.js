@@ -21,10 +21,13 @@ export default tseslint.config(
       prettier: eslintPluginPrettier,
     },
     rules: {
-      // ...pluginReact.configs.flat.recommended.rules,
-      // ...pluginReactHook.configs.recommended.rules,
       'prettier/prettier': 'error',
       'react/jsx-uses-vars': 'error',
+
+      'react/no-unused-state': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'prefer-const': 'error', // 재할당이 없는 변수는 const 사용
+      'no-console': 'warn',
     },
   },
   eslintConfigPrettier,
