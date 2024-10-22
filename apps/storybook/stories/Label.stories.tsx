@@ -1,7 +1,7 @@
-import Label from './Label';
-import { StoryObj, Meta } from '@storybook/react';
+import Label from "../../../packages/ui/src/components/Label/Label";
+import { StoryObj, Meta } from "@storybook/react";
 const meta = {
-  title: 'Label',
+  title: "Label",
   component: Label.Root,
 } satisfies Meta<typeof Label.Root>;
 
@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Titled: Story = {
   args: {
     asChild: false,
-    htmlFor: 'food',
-    children: 'stories test',
+    htmlFor: "food",
+    children: "stories test",
   },
 };
