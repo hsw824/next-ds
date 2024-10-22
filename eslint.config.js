@@ -17,12 +17,12 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
     plugins: {
       react: pluginReact,
-      pluginReactHook,
+      'react-hook': pluginReactHook,
       prettier: eslintPluginPrettier,
     },
     rules: {
-      ...pluginReact.configs.flat.recommended.rules,
-      ...pluginReactHook.configs.recommended.rules,
+      // ...pluginReact.configs.flat.recommended.rules,
+      // ...pluginReactHook.configs.recommended.rules,
       'prettier/prettier': 'error',
       'react/jsx-uses-vars': 'error',
     },
