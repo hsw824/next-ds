@@ -46,5 +46,9 @@
       "eslint --ext .tsx --ext .ts src/",
       "prettier --write"
     ]
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/"
+  ]
 }

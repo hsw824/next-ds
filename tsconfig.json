@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "files": [],
-  "references": [{ "path": "./packages/ui" }],
+  "references": [{ "path": "./packages/ui" }, { "path": "./apps/storybook" }],
   "include": ["src", "hooks"],
   "exclude": ["**/node_modules", "**/dist"]
 }
