@@ -7,7 +7,7 @@ function App() {
       <Popover.Trigger>트리거</Popover.Trigger>
       <Popover.Portal container={portal}>
         <Popover.Content style={{ width: '50%', height: '200px', border: '1px solid #000', position: 'absolute' }}>
-          이얏!
+          테스트
         </Popover.Content>
       </Popover.Portal>
     </Popover>

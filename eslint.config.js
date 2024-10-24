@@ -1,28 +1,34 @@
 import globals from 'globals';
-import pluginJs from '@eslint/js';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js';
 import pluginReact from 'eslint-plugin-react';
-import pluginPrettier from 'eslint-plugin-prettier';
-import configPrettier from 'eslint-config-prettier';
+import pluginReactHook from 'eslint-plugin-react-hooks';
 
-export default [
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
+export default tseslint.config(
+  {
+    ignores: ['node_modules', 'dist'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
-    languageOptions: {
-      globals: globals.browser,
-      parser: tsParser,
-    },
+    languageOptions: { globals: globals.browser },
     plugins: {
-      '@typescript-eslint': tsPlugin,
+      react: pluginReact,
+      'react-hook': pluginReactHook,
+      prettier: eslintPluginPrettier,
     },
     rules: {
-      ...pluginJs.configs.recommended.rules,
-      ...tsPlugin.configs['eslint-recommended'].overrides[0].rules,
-      ...tsPlugin.configs.recommended.rules,
-      ...pluginReact.configs.recommended.rules,
-      ...pluginPrettier.configs.recommended.rules,
+      'prettier/prettier': 'error',
+      'react/jsx-uses-vars': 'error',
+
+      'react/no-unused-state': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'prefer-const': 'error', // 재할당이 없는 변수는 const 사용
+      'no-console': 'warn',
     },
   },
-  configPrettier,
-];
+  eslintConfigPrettier,
+);
