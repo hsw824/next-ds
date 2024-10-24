@@ -50,8 +50,13 @@ const Popover = forwardRef<HTMLDivElement, PopoverRootType>(({ children, ...prop
 const Trigger = forwardRef<HTMLButtonElement, TriggerType>(({ children, ...props }, ref) => {
   const { setToggle } = useContext();
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setToggle((prev) => !prev);
+  };
+
   return (
-    <Primitive.button {...props} ref={ref} onClick={() => setToggle((prev) => !prev)}>
+    <Primitive.button {...props} ref={ref} onClick={handleClick}>
       {children}
     </Primitive.button>
   );

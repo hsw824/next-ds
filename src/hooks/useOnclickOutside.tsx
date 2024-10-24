@@ -7,9 +7,9 @@ const useOnclickOutside = (ref: RefObject<HTMLElement>, onClose: () => void) => 
   };
 
   useEffect(() => {
-    window.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('click', handleClickOutside);
     return () => {
-      window.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('click', handleClickOutside);
     };
   }, [ref, onClose]);
 };
