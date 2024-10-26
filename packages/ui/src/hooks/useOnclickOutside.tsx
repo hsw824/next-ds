@@ -11,7 +11,7 @@ const useOnclickOutside = (ref: RefObject<HTMLElement>, onClose: () => void) => 
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
-  }, [ref, onClose]);
+  }, [handleClickOutside]);
 };
 
 export default useOnclickOutside;
