@@ -1,11 +1,11 @@
-import PortalRoot from '../../utils/CreatePortal';
-import createContext from '../../utils/createContext';
-import ViewportContextProvider from '../../utils/viewportContext';
-import useStyleInView from '../../hooks/useStyleInView';
-import useOnclickOutside from '../../hooks/useOnclickOutside';
+import PortalRoot from '@/utils/CreatePortal';
+import createContext from '@/utils/createContext';
+import ViewportContextProvider from '@/utils/viewportContext';
+import useStyleInView from '@/hooks/useStyleInView';
+import useOnclickOutside from '@/hooks/useOnclickOutside';
 
 import { forwardRef, MutableRefObject, PropsWithChildren, useRef, useState } from 'react';
-import { Primitive } from '../Primitive';
+import { Primitive } from '@/components/Primitive';
 
 type PopoverRootType = PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>;
 type TriggerType = PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>;

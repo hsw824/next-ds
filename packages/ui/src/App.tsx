@@ -1,5 +1,5 @@
-import './App.css';
-import Tooltip from './components/Tooltip';
+import '@/App.css';
+import Tooltip from '@/components/Tooltip';
 function App() {
   const portal = document.getElementById('portal');
   return (

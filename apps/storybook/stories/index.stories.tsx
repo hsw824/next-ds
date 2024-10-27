@@ -1,4 +1,4 @@
-import TabMenuContainer from "../../../packages/ui/src/components/TabMenu/index";
+import TabMenuContainer from "@ui/components/TabMenu/index";
 import { StoryObj, Meta } from "@storybook/react";
 
 interface TabMenuContainerProps {

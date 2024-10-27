@@ -1,6 +1,6 @@
-import Slot from '../Slot/Slot';
-import ReactDOM from 'react-dom';
 import { forwardRef } from 'react';
+import ReactDOM from 'react-dom';
+import Slot from '@/components/Slot/Slot';
 const NODES = [
   'a',
   'button',
