@@ -79,18 +79,6 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(typescript@5.6.3)(vite@5.4.9(@types/node@22.7.7))
 
-  apps/diary:
-    dependencies:
-      next:
-        specifier: ^15.0.1
-        version: 15.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.3.1
-        version: 18.3.1(react@18.3.1)
-
   apps/hongcha:
     dependencies:
       axios:
