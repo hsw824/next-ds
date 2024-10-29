@@ -29,7 +29,7 @@ export default function () {
   }, []);
 
   return (
-    <ul className="flex flex-nowrap overflow-x-auto">
+    <ul className="flex flex-nowrap  bg-black w-full h-1/2 p-3 overflow-hidden">
       {data.map(({ id, title, poster_path }) => {
         return <Image key={id} title={title} posterPath={poster_path} />;
       })}

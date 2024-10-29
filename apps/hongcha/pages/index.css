@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#__next {
+  @apply h-full;
+}
+
 @layer base {
   img,
   video {
