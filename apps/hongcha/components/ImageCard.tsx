@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
+import ImageLoader from './ImageLoader';
+import DescriptionCard from './DescriptionCard';
 
-interface ImageProps {
+interface ImageCardProps {
   title: string;
   posterPath: string;
 }
 
-const Image = ({ title, posterPath }: ImageProps) => {
+const ImageCard = ({ title, posterPath }: ImageCardProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
   const mouseEnterTimer = useRef<NodeJS.Timeout | null>(null);
   const imgContainerRef = useRef<HTMLLIElement | null>(null);
@@ -30,15 +32,15 @@ const Image = ({ title, posterPath }: ImageProps) => {
   };
   return (
     <li
-      className="min-w-[300px] px-4 relative hover:opacity-80 transition-transform h-80"
+      className="basis-1/4 grow-0 shrink-0 px-4 relative hover:opacity-80 transition-transform h-80"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       ref={imgContainerRef}
     >
-      <img className="w-full" src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
-      {isMouseEnter && <div className="w-full h-full text-white absolute top-1/2">{title}</div>}
+      <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
+      {isMouseEnter && <DescriptionCard title={title} />}
     </li>
   );
 };
 
-export default Image;
+export default ImageCard;
