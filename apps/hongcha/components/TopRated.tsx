@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { getTopRated } from 'utils/useAxios';
-
 import Image from 'components/ImageCard';
+
+import { getTopRated } from 'utils/useAxios';
+import { useQuery } from '@tanstack/react-query';
 
 //TODO:  api 관련 type은 아예 파일을 만들어서 그 안에서 관리
 interface TopRatedResultType {
@@ -22,14 +22,18 @@ interface TopRatedResultType {
 }
 
 const TopRated = () => {
-  const [data, setData] = useState<TopRatedResultType[]>([]);
-  const handleTopRated = async () => {
-    const { data } = await getTopRated();
-    setData(data.results);
-  };
-  useEffect(() => {
-    handleTopRated();
-  }, []);
+  const {
+    isError,
+    isPending,
+    data = [],
+  } = useQuery<TopRatedResultType[]>({
+    queryKey: ['topRated'],
+    queryFn: getTopRated,
+  });
+
+  if (isError) return <div>에러발생</div>;
+
+  if (isPending) return <div>로딩중</div>;
 
   return (
     <ul className="flex flex-nowrap  bg-black w-full h-1/2 p-3 overflow-hidden">

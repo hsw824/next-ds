@@ -38,6 +38,6 @@ client.interceptors.response.use(
 );
 
 export const getTopRated = async () => {
-  const data = await client.get('/top_rated?language=ko&page=1');
-  return data;
+  const response = await client.get('/top_rated?language=ko&page=1');
+  return response.data.results;
 };
