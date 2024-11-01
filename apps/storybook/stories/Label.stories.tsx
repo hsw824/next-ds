@@ -1,4 +1,4 @@
-import Label from "../../../packages/ui/src/components/Label/Label";
+import Label from "@ui/components/Label/Label";
 import { StoryObj, Meta } from "@storybook/react";
 const meta = {
   title: "Label",

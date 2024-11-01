@@ -1,7 +1,8 @@
-import { forwardRef, useState, PropsWithChildren } from 'react';
-import { Primitive } from '../Primitive';
+import createContext from '@/utils/createContext';
 
-import createContext from '../../utils/createContext';
+import { forwardRef, useState, PropsWithChildren } from 'react';
+import { Primitive } from '@/components/Primitive';
+
 interface BaseComponentType {
   asChild?: boolean;
 }

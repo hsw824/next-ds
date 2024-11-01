@@ -1,9 +1,9 @@
-import createContext from '../../utils/createContext';
-import PortalRoot from '../../utils/CreatePortal';
-import ViewportContextProvider from '../../utils/viewportContext';
-import useStyleInView from '../../hooks/useStyleInView';
+import createContext from '@/utils/createContext';
+import PortalRoot from '@/utils/CreatePortal';
+import ViewportContextProvider from '@/utils/viewportContext';
+import useStyleInView from '@/hooks/useStyleInView';
 
-import { Primitive } from '../Primitive';
+import { Primitive } from '@/components/Primitive';
 import { MutableRefObject, PropsWithChildren, forwardRef, useRef, useState } from 'react';
 
 interface ContextType {

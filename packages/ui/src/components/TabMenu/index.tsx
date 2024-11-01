@@ -1,8 +1,8 @@
 import './index.css';
-import createContext from '../../utils/createContext';
+import createContext from '@/utils/createContext';
 
 import { ReactNode, forwardRef, useState } from 'react';
-import { Primitive } from '../Primitive';
+import { Primitive } from '@/components/Primitive';
 interface DataType {
   id: number;
   title: string;

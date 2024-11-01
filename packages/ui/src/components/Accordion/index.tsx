@@ -1,7 +1,7 @@
 import './index.css';
+import createContext from '@/utils/createContext';
 import { ReactNode, forwardRef, useState } from 'react';
-import createContext from '../../utils/createContext';
-import { Primitive } from '../Primitive';
+import { Primitive } from '@/components/Primitive';
 interface RootComponentType extends React.HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   type: 'single' | 'multiple';

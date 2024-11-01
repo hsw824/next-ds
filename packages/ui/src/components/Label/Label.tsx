@@ -1,5 +1,5 @@
 import { ReactNode, forwardRef } from 'react';
-import { Primitive } from '../Primitive';
+import { Primitive } from '@/components/Primitive';
 
 interface ComponentTypes extends React.LabelHTMLAttributes<HTMLLabelElement> {
   asChild?: boolean;
