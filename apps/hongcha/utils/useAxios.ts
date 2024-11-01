@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { API_ERROR_MESSAGE } from '../constants/axiosErrorMessage';
 
-const BASE_URL = 'https://api.themoviedb.org/3/movie';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 const axiosConfig: AxiosRequestConfig = {
   baseURL: BASE_URL,
@@ -38,6 +38,11 @@ client.interceptors.response.use(
 );
 
 export const getTopRated = async () => {
-  const response = await client.get('/top_rated?language=ko&page=1');
+  const response = await client.get('/movie/top_rated?language=ko&page=1');
   return response.data.results;
+};
+
+export const getDefaultGenre = async () => {
+  const response = await client.get('/genre/movie/list?language=ko');
+  return response.data.genres;
 };
