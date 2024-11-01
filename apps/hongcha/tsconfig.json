@@ -3,10 +3,10 @@
   "include": ["**/*.ts", "**/*.tsx", "types/axios.d.ts"],
   "compilerOptions": {
     "baseUrl": ".",
-    // "paths": {
-    //   "@/*": ["./src/*"]
-    // },
-    "allowJs": true,
+    "paths": {
+      "@component/*": ["./component/*"]
+    },
+    "allowJs": false,
     "incremental": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
