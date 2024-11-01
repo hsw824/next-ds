@@ -6,7 +6,8 @@ import pluginReactHook from 'eslint-plugin-react-hooks';
 
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintConfigPrettier from 'eslint-config-prettier';
-export default tseslint.config(
+
+const baseEslintConfig = tseslint.config(
   {
     ignores: ['node_modules', 'dist'],
   },
@@ -32,3 +33,5 @@ export default tseslint.config(
   },
   eslintConfigPrettier,
 );
+
+export default baseEslintConfig;
