@@ -5,9 +5,10 @@ import DescriptionCard from './DescriptionCard';
 interface ImageCardProps {
   title: string;
   posterPath: string;
+  id: number;
 }
 
-const ImageCard = ({ title, posterPath }: ImageCardProps) => {
+const ImageCard = ({ title, posterPath, id }: ImageCardProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
   const mouseEnterTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -30,7 +31,7 @@ const ImageCard = ({ title, posterPath }: ImageCardProps) => {
       style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
     >
       <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
-      {isMouseEnter && <DescriptionCard title={title} />}
+      {isMouseEnter && <DescriptionCard title={title} id={id} />}
     </li>
   );
 };
