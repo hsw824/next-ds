@@ -22,8 +22,8 @@ const ImageLoader = ({ src, width, height, alt = '' }: ImageLoaderType) => {
     };
   }, [src]);
 
-  if (status === 'load') return <div>로딩</div>;
-  if (status === 'error') return <div>오류</div>;
+  if (status === 'load') return <div style={{ color: '#fff' }}>로딩</div>;
+  if (status === 'error') return <div style={{ color: '#fff' }}>오류</div>;
   return <img src={src} width={width} height={height} alt={alt} />;
 };
 
