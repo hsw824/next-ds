@@ -53,7 +53,12 @@ export const getFavoriteMovies = async (pageNum: number | string) => {
   return response.data;
 };
 
-export const postFavoriteMovie = async (data) => {
+export const postFavoriteMovie = async (data: { media_type: string; media_id: number; favorite: string }) => {
   const response = await client.post(`/account/${ACCOUNT_ID}/favorite`, data);
   return response;
+};
+
+export const getDetailMovie = async (id: string) => {
+  const response = await client.get(`/movie/${id}?language=ko`);
+  return response.data;
 };
