@@ -12,7 +12,7 @@ export default async function postFavoriteHandler(req: NextApiRequest, res: Next
       const response = await postFavoriteMovie(body);
       res.status(200).json(response.data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error });
     }
   }
 }

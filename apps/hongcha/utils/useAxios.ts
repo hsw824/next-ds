@@ -62,3 +62,38 @@ export const getDetailMovie = async (id: string) => {
   const response = await client.get(`/movie/${id}?language=ko`);
   return response.data;
 };
+
+/**
+ * 나중에 보기에 영화 추가
+ *
+ * @param data - Watchlist 요청 데이터
+ * @param data.media_type - 미디어 타입 ('movie') -> 현재 movie로 고정
+ * @param data.media_id - 미디어 ID
+ * @param data.watchlist - true면 추가, false면 제거
+ *
+ * @returns axios 응답 객체를 포함한 Promise
+ *
+ * @throws {Error} ACCOUNT_ID가 설정되지 않은 경우
+ * @throws {AxiosError} API 요청 실패시
+ *
+ * @example
+ * ```ts
+ * // 영화를 watchlist에 추가
+ * await postWatchList({
+ *   media_type: 'movie',
+ *   media_id: 123,
+ *   watchlist: true
+ * });
+ * ```
+ */
+export const postWatchList = async (data: { media_type: string; media_id: number; watchlist: boolean }) => {
+  const response = await client.post(`/account/${ACCOUNT_ID}/watchlist`, data);
+  return response;
+};
+
+export const getWatchList = async (pageNum: string | number) => {
+  const response = await client.get(
+    `/account/${ACCOUNT_ID}/watchlist/movies?language=ko&page=${pageNum}&sort_by=created_at.asc`,
+  );
+  return response.data;
+};
