@@ -97,3 +97,9 @@ export const getWatchList = async (pageNum: string | number) => {
   );
   return response.data;
 };
+
+export const getSearchResult = async (query: string, pageNum: string | number) => {
+  const response = await client.get(`search/movie?query=${query}&include_adult=false&language=ko&page=${pageNum}`);
+
+  return response.data;
+};
