@@ -34,7 +34,7 @@ const ImageCard = ({ title, posterPath, id }: ImageCardProps) => {
         onMouseLeave={handleMouseLeave}
         style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
       >
-        <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
+        <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} width="200" />
         {isMouseEnter && <DescriptionCard title={title} id={id} />}
       </li>
     </Link>
