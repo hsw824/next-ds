@@ -5,11 +5,11 @@ import Link from 'next/link';
 
 interface ImageCardProps {
   title: string;
-  posterPath: string;
+  posterUrl: string;
   id: number;
 }
 
-const ImageCard = ({ title, posterPath, id }: ImageCardProps) => {
+const ImageCard = ({ title, posterUrl, id }: ImageCardProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
   const mouseEnterTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -34,7 +34,7 @@ const ImageCard = ({ title, posterPath, id }: ImageCardProps) => {
         onMouseLeave={handleMouseLeave}
         style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
       >
-        <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
+        <ImageLoader src={posterUrl} />
         {isMouseEnter && <DescriptionCard title={title} id={id} />}
       </li>
     </Link>
