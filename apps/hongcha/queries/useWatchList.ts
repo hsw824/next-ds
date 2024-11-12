@@ -16,6 +16,5 @@ export const useWatchList = (pageNum: number) => {
       totalPages: data.totalPages,
     }),
   });
-  console.log('result', results);
   return { isError, isLoading, results, totalPages };
 };

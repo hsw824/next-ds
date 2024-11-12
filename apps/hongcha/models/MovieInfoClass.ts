@@ -29,7 +29,6 @@ export default class MovieInfoClass {
   voteCount: number;
 
   constructor(data: originTopRatedResultType) {
-    console.log('data', data);
     this.adult = data.adult;
     this.backdropPath = data.backdrop_path;
     this.genreIds = data.genre_ids;
