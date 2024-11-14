@@ -1,13 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { TopRatedResultType } from 'types/apiTypes';
 
-interface ResultType {
-  results: TopRatedResultType[];
-  totalPages: number;
-}
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
+import { FormattedResponseType } from 'types/responseTypes';
+
 const SearchPage = () => {
   const router = useRouter();
   const { searchQuery } = router.query;
@@ -28,7 +25,7 @@ const SearchPage = () => {
     isError,
     isLoading,
     data: { results = [], totalPages = 0 } = {},
-  } = useQuery<ResultType>({
+  } = useQuery<FormattedResponseType>({
     queryKey: ['search-movie', searchQuery, pageNum],
     queryFn: () => getList(searchQuery as string, pageNum),
     enabled: !!searchQuery,

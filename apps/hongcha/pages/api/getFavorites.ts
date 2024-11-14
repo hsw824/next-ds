@@ -2,7 +2,7 @@ import withBFFHandler from './utils/withBFFHandler';
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getFavoriteMovies } from 'utils/useAxios';
-import { ResponseDataType } from 'types/apiTypes';
+import { ResponseDataType } from 'types/movieTypes';
 
 export default withBFFHandler(async (req: NextApiRequest, res: NextApiResponse) => {
   const pageNum = (req.query.page as string) || 1;

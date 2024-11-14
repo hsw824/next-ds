@@ -1,4 +1,4 @@
-import { originTopRatedResultType } from 'types/apiTypes';
+import { TMDBMovieType } from 'types/movieTypes';
 
 export default class MovieInfoClass {
   /** 성인용 컨텐츠 여부 */
@@ -28,7 +28,7 @@ export default class MovieInfoClass {
   /** 총 투표 수 */
   voteCount: number;
 
-  constructor(data: originTopRatedResultType) {
+  constructor(data: TMDBMovieType) {
     this.adult = data.adult;
     this.backdropPath = data.backdrop_path;
     this.genreIds = data.genre_ids;

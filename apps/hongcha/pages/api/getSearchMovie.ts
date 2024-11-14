@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSearchResult } from 'utils/useAxios';
-import { ResponseDataType } from 'types/apiTypes';
+import { ResponseDataType } from 'types/movieTypes';
 
 export default async function getSearchHandler(req: NextApiRequest, res: NextApiResponse) {
   const { query, page = 1 } = req.query;

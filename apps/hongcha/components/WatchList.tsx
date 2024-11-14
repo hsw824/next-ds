@@ -1,7 +1,7 @@
 import MovieList from './MovieList';
 
+import { useWatchList } from 'queries/useWatchListQuery';
 import { useState } from 'react';
-import { useWatchList } from 'queries/useWatchList';
 
 const WatchList = () => {
   const [pageNum, setPageNum] = useState(1);

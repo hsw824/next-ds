@@ -1,7 +1,7 @@
 import MovieList from './MovieList';
 
 import { useState } from 'react';
-import { useFavorite } from 'queries/useFavorite';
+import { useFavorite } from 'queries/useFavoriteQuery';
 
 const TopRated = () => {
   const [pageNum, setPageNum] = useState(1);

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getTopRated } from 'utils/useAxios';
-import { ResponseDataType } from 'types/apiTypes';
+import { ResponseDataType } from 'types/movieTypes';
 import withBFFHandler from './utils/withBFFHandler';
 
 export default withBFFHandler(async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,5 +1,5 @@
-import { usePostFavorite } from 'queries/usePostFavorite';
-import { usePostWatchList } from 'queries/usePostWatchList';
+import { usePostFavorite } from 'queries/useFavoriteQuery';
+import { usePostWatchList } from 'queries/useWatchListQuery';
 import { MouseEvent } from 'react';
 
 interface DescriptionCardType {
