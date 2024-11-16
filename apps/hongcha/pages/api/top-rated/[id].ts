@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { GenreType } from 'types/apiTypes';
+import { GenreType } from 'types/movieTypes';
 import { getDetailMovie } from 'utils/useAxios';
 
 type ProductionCompany = {

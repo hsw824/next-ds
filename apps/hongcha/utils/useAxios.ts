@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { API_ERROR_MESSAGE } from '../constants/axiosErrorMessage';
+import { BASE_URL } from 'constants/api';
 
-const BASE_URL = 'https://api.themoviedb.org/3';
 const ACCOUNT_ID = '21594855';
 
 const axiosConfig: AxiosRequestConfig = {

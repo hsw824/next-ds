@@ -5,11 +5,11 @@ import Link from 'next/link';
 
 interface ImageCardProps {
   title: string;
-  posterPath: string;
+  posterUrl: string;
   id: number;
 }
 
-const ImageCard = ({ title, posterPath, id }: ImageCardProps) => {
+const ImageCard = ({ title, posterUrl, id }: ImageCardProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
   const mouseEnterTimer = useRef<NodeJS.Timeout | null>(null);
 

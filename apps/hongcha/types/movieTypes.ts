@@ -1,4 +1,4 @@
-export interface originTopRatedResultType {
+export interface TMDBMovieType {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
@@ -15,21 +15,8 @@ export interface originTopRatedResultType {
   vote_count: number;
 }
 
-export interface GenreType {
-  id: number;
-  name: string;
-}
-
-export interface ResponseDataType {
-  page: number;
-  results: originTopRatedResultType[];
-  total_pages: number;
-  total_results: number;
-}
-
-export interface TopRatedResultType {
+export interface FormattedMovieType {
   adult: boolean;
-  /** 상위 랭킹 결과 이미지 path */
   backdropPath: string;
   genreIds: number[];
   id: number;
@@ -42,4 +29,9 @@ export interface TopRatedResultType {
   video: boolean;
   voteAverage: number;
   voteCount: number;
+}
+
+export interface MovieGenreType {
+  id: number;
+  name: string;
 }
