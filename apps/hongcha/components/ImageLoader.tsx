@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import useIntersectionObserver from 'hook/useIntersectionObserver';
+import { useEffect, useRef } from 'react';
 
 interface ImageLoaderType {
   src: string;
@@ -7,24 +8,23 @@ interface ImageLoaderType {
   alt?: string;
 }
 
+const ioOptions = {
+  threshold: 0,
+  rootMargin: '100% 0% 100% 0%',
+};
+
 const ImageLoader = ({ src, width, height, alt = '' }: ImageLoaderType) => {
-  const [status, setStatus] = useState<'error' | 'load' | 'success'>('load');
+  const imgRef = useRef<HTMLImageElement>(null);
+  const { entries } = useIntersectionObserver(imgRef, ioOptions);
+
   useEffect(() => {
-    const img = new Image();
-    img.src = src;
+    const isVisible = entries[0]?.isIntersecting;
+    if (isVisible) {
+      imgRef.current!.src = src;
+    }
+  }, [src, entries]);
 
-    img.onload = () => {
-      setStatus('success');
-    };
-
-    img.onerror = () => {
-      setStatus('error');
-    };
-  }, [src]);
-
-  if (status === 'load') return <div style={{ color: '#fff' }}>로딩</div>;
-  if (status === 'error') return <div style={{ color: '#fff' }}>오류</div>;
-  return <img src={src} width={width} height={height} alt={alt} />;
+  return <img ref={imgRef} width={width} height={height} alt={alt} />;
 };
 
 export default ImageLoader;
