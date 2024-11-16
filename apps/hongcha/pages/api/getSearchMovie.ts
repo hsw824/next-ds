@@ -1,15 +1,20 @@
+import withBFFHandler from './utils/withBFFHandler';
+
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSearchResult } from 'utils/useAxios';
-import { ResponseDataType } from 'types/movieTypes';
+import { TMDBResponseType } from 'types/responseTypes';
+import { NotFoundError } from 'models/CustomErrorClass';
 
-export default async function getSearchHandler(req: NextApiRequest, res: NextApiResponse) {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query, page = 1 } = req.query;
 
-  try {
-    const { results, total_pages }: ResponseDataType = await getSearchResult(query as string, page as string);
-    // const topRatedInstances = results.map((result) => new searchMovieResult(result, genre));
-    res.status(200).json({ results, totalPages: total_pages });
-  } catch (error) {
-    res.status(500).json({ message: '에러', error });
+  const { results, total_pages }: TMDBResponseType = await getSearchResult(query as string, page as string);
+
+  if (!results) {
+    throw new NotFoundError('좋아하는 영화 리스트를 찾을 수 없습니다.');
   }
-}
+
+  res.status(200).json({ results, totalPages: total_pages });
+};
+
+export default withBFFHandler({ handler });

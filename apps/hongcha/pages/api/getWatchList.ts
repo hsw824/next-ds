@@ -1,11 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getWatchList } from 'utils/useAxios';
-import { ResponseDataType } from 'types/movieTypes';
 import withBFFHandler from './utils/withBFFHandler';
 
-export default withBFFHandler(async (req: NextApiRequest, res: NextApiResponse) => {
-  const pageNum = (req.query.page as string) || 1;
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getWatchList } from 'utils/useAxios';
+import { TMDBResponseType } from 'types/responseTypes';
+import { NotFoundError, ValidError } from 'models/CustomErrorClass';
 
-  const { results, total_pages }: ResponseDataType = await getWatchList(pageNum);
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const pageNum = (req.query.page as string) || 1;
+  if (!Number(pageNum) || Number(pageNum) < 1) {
+    throw new ValidError('pageNum이 유효하지 않음');
+  }
+  const { results, total_pages }: TMDBResponseType = await getWatchList(pageNum);
+
+  if (!results) {
+    throw new NotFoundError('좋아하는 영화 리스트를 찾을 수 없습니다.');
+  }
   res.status(200).json({ results, totalPages: total_pages });
-});
+};
+
+export default withBFFHandler({ handler });
