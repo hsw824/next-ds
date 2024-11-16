@@ -1,13 +1,15 @@
 import { useRef, useState } from 'react';
 import ImageLoader from './ImageLoader';
 import DescriptionCard from './DescriptionCard';
+import Link from 'next/link';
 
 interface ImageCardProps {
   title: string;
-  posterPath: string;
+  posterUrl: string;
+  id: number;
 }
 
-const ImageCard = ({ title, posterPath }: ImageCardProps) => {
+const ImageCard = ({ title, posterUrl, id }: ImageCardProps) => {
   const [isMouseEnter, setIsMouseEnter] = useState(false);
   const mouseEnterTimer = useRef<NodeJS.Timeout | null>(null);
 
@@ -23,15 +25,19 @@ const ImageCard = ({ title, posterPath }: ImageCardProps) => {
     setIsMouseEnter(false);
   };
   return (
-    <li
+    <Link
       className="basis-1/4 grow-0 shrink-0 px-4 relative hover:opacity-80 transition-transform h-80"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
+      href={`/top-rated/${id}`}
     >
-      <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} />
-      {isMouseEnter && <DescriptionCard title={title} />}
-    </li>
+      <li
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
+      >
+        <ImageLoader src={`http://image.tmdb.org/t/p/w500${posterPath}`} width="200" />
+        {isMouseEnter && <DescriptionCard title={title} id={id} />}
+      </li>
+    </Link>
   );
 };
 

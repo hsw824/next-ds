@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.ts", "**/*.tsx", "types/axios.d.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "./types/**/*"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
