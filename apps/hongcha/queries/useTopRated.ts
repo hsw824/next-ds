@@ -16,7 +16,6 @@ export const useTopRated = (pageNum: number) => {
       results: data.results.map((result) => new MovieInfoClass(result)),
       totalPages: data.totalPages,
     }),
-    throwOnError: true,
   });
 
   return { isError, isLoading, results, totalPages, error };

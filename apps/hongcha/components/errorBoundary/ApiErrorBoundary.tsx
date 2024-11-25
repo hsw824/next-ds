@@ -13,6 +13,7 @@ interface PropsType {
 
 export class ApiErrorBoundary extends React.Component<PropsType, ApiErrorBoundaryState> {
   state = {
+    //shouldHandleError랑 shouldRethrow는 같은 역할이니까 사실 하나만 있어도 될것같다.
     shouldHandleError: false,
     shouldRethrow: false,
     error: null,
@@ -31,9 +32,9 @@ export class ApiErrorBoundary extends React.Component<PropsType, ApiErrorBoundar
       error,
     };
   }
+  //componentDidCatch -> 에러 로그를 쌓는것이 아니기 때문에 사실 지금 이게 안되는거랑 큰 연관성은 없다.
 
   render() {
-    console.log('this', this.state);
     if (this.state.shouldRethrow) {
       throw this.state.error;
     }
@@ -45,7 +46,6 @@ export class ApiErrorBoundary extends React.Component<PropsType, ApiErrorBoundar
     if (this.state.error && (this.state.error as Error) instanceof AuthError) {
       return <div>auth 오류</div>;
     }
-
     return this.props.children;
   }
 }
