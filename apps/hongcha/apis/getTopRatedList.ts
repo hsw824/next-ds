@@ -1,6 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { handleApiError } from './handleApiError';
 
 export const getTopRatedList = async (pageNum: number) => {
-  const { data } = await axios.get(`/api/getTopRated?page=${pageNum}`);
-  return data;
+  try {
+    const { data } = await axios.get(`/api/getTopRated?page=${pageNum}`);
+    return data;
+  } catch (error) {
+    handleApiError(error as AxiosError);
+  }
 };

@@ -1,11 +1,20 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { PostFavoriteType } from 'types/requestType';
+import { handleApiError } from './handleApiError';
 
 export const getFavoriteList = async (pageNum: number | string) => {
-  const { data } = await axios.get(`/api/getFavorites?page=${pageNum}`);
-  return data;
+  try {
+    const { data } = await axios.get(`/api/getFavorites?page=${pageNum}`);
+    return data;
+  } catch (error) {
+    handleApiError(error as AxiosError);
+  }
 };
 
 export const postFavoriteList = async (body: PostFavoriteType) => {
-  await axios.post('/api/postFavorite', body);
+  try {
+    await axios.post('/api/postFavorite', body);
+  } catch (error) {
+    handleApiError(error as AxiosError);
+  }
 };
