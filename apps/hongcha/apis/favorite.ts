@@ -4,7 +4,7 @@ import { handleApiError } from './handleApiError';
 
 export const getFavoriteList = async (pageNum: number | string) => {
   try {
-    const { data } = await axios.get(`/api/getFavorites?page=${pageNum}`);
+    const { data } = await axios.get(`http://localhost:3000/api/getFavorites?page=${pageNum}`);
     return data;
   } catch (error) {
     handleApiError(error as AxiosError);

@@ -1,6 +1,6 @@
 import MovieInfoClass from 'models/MovieInfoClass';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useSuspenseQuery, useMutation } from '@tanstack/react-query';
 import { getFavoriteList, postFavoriteList } from 'apis/favorite';
 import { TMDBQueryResponseType } from 'types/responseTypes';
 
@@ -8,8 +8,9 @@ export const useFavorite = (pageNum: number) => {
   const {
     isError,
     isLoading,
+    error,
     data: { results = [], totalPages = 0 } = {},
-  } = useQuery<TMDBQueryResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
+  } = useSuspenseQuery<TMDBQueryResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
     queryKey: ['favorites', pageNum],
     queryFn: () => getFavoriteList(pageNum),
     select: (data) => ({
@@ -18,7 +19,7 @@ export const useFavorite = (pageNum: number) => {
     }),
   });
 
-  return { isError, isLoading, results, totalPages };
+  return { isError, isLoading, results, totalPages, error };
 };
 
 export const usePostFavorite = () => {

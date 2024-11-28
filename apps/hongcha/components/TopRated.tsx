@@ -19,9 +19,8 @@ const TopRated = () => {
     setPageNum((prev) => prev + 1);
   };
 
-  const { isLoading, results, totalPages, error } = useTopRated(pageNum);
+  const { results, totalPages, error } = useTopRated(pageNum);
 
-  if (isLoading) return <div>로딩중</div>;
   if (error) throw error;
 
   return (

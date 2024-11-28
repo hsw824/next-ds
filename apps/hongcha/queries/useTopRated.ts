@@ -1,5 +1,5 @@
 import MovieInfoClass from 'models/MovieInfoClass';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getTopRatedList } from 'apis/getTopRatedList';
 import { TMDBQueryResponseType } from 'types/responseTypes';
 
@@ -9,7 +9,7 @@ export const useTopRated = (pageNum: number) => {
     isLoading,
     error,
     data: { results = [], totalPages = 0 } = {},
-  } = useQuery<TMDBQueryResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
+  } = useSuspenseQuery<TMDBQueryResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
     queryKey: ['topRated', pageNum],
     queryFn: () => getTopRatedList(pageNum),
     select: (data) => ({

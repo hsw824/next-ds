@@ -5,7 +5,8 @@ import { useFavorite } from 'queries/useFavoriteQuery';
 
 const TopRated = () => {
   const [pageNum, setPageNum] = useState(1);
-  const { isError, isLoading, results, totalPages } = useFavorite(pageNum);
+  const { error, results, totalPages } = useFavorite(pageNum);
+  if (error) throw error;
 
   const handleNextPage = () => {
     const nextPage = pageNum + 1;
@@ -13,8 +14,6 @@ const TopRated = () => {
     setPageNum((prev) => prev + 1);
   };
 
-  if (isError) return <div>에러발생</div>;
-  if (isLoading) return <div>로딩중</div>;
   return (
     <>
       <MovieList results={results} />
