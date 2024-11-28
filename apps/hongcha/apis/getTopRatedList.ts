@@ -3,7 +3,7 @@ import { handleApiError } from './handleApiError';
 
 export const getTopRatedList = async (pageNum: number) => {
   try {
-    const { data } = await axios.get(`/api/getTopRated?page=${pageNum}`);
+    const { data } = await axios.get(`http://localhost:3000/api/getTopRated?page=${pageNum}`);
     return data;
   } catch (error) {
     handleApiError(error as AxiosError);
