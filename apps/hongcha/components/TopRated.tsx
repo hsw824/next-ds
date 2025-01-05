@@ -19,10 +19,11 @@ const TopRated = () => {
     setPageNum((prev) => prev + 1);
   };
 
-  const { isError, isLoading, results, totalPages } = useTopRated(pageNum);
+  const { isLoading, results, totalPages, error } = useTopRated(pageNum);
 
-  if (isError) return <div>에러발생</div>;
   if (isLoading) return <div>로딩중</div>;
+  if (error) throw error;
+
   return (
     <>
       <MovieList results={results} />
