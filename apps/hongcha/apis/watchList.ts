@@ -4,7 +4,7 @@ import { handleApiError } from './handleApiError';
 
 export const getBFFWatchList = async (pageNum: number | string) => {
   try {
-    const { data } = await axios.get(`/api/getWatchList?page=${pageNum}`);
+    const { data } = await axios.get(`http://localhost:3000/api/getWatchList?page=${pageNum}`);
     return data;
   } catch (error) {
     handleApiError(error as AxiosError);

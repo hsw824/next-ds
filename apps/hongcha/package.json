@@ -19,6 +19,7 @@
     "next": "^15.0.1"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.61.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14"

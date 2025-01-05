@@ -1,15 +1,16 @@
 import MovieInfoClass from 'models/MovieInfoClass';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useSuspenseQuery, useMutation } from '@tanstack/react-query';
 import { getBFFWatchList, postBFFWatchList } from 'apis/watchList';
-import { FormattedResponseType } from 'types/responseTypes';
+import { TMDBQueryResponseType } from 'types/responseTypes';
 
 export const useWatchList = (pageNum: number) => {
   const {
     isError,
     isLoading,
+    error,
     data: { results = [], totalPages = 0 } = {},
-  } = useQuery<FormattedResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
+  } = useSuspenseQuery<TMDBQueryResponseType, Error, { results: MovieInfoClass[]; totalPages: number }>({
     queryKey: ['watch-list', pageNum],
     queryFn: () => getBFFWatchList(pageNum),
     select: (data) => ({
@@ -17,7 +18,7 @@ export const useWatchList = (pageNum: number) => {
       totalPages: data.totalPages,
     }),
   });
-  return { isError, isLoading, results, totalPages };
+  return { isError, isLoading, results, totalPages, error };
 };
 
 export const usePostWatchList = () => {

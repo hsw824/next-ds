@@ -13,5 +13,5 @@ export const handleApiError = (error: AxiosError) => {
   if (error.status === 404) {
     throw new NotFoundError('요청한 페이지를 찾을 수 없습니다.');
   }
-  throw new Error('알 수 없는 오류가 발생했습니다.');
+  throw new Error(error.message);
 };
