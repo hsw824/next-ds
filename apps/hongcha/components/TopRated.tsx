@@ -20,11 +20,15 @@ const TopRated = () => {
       setItems((prev) => [...prev, ...results]);
     }
   }, [isFetching]);
-
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <div className="bg-red-600 text-white">리액트 쿼리 로딩중</div>;
   if (error) throw error;
 
-  return <MovieList results={items} callApi={setPageNum} />;
+  return (
+    <div>
+      {isFetching && <div className="bg-blue-600 text-white">리액트 쿼리 중간 로딩중</div>}
+      <MovieList results={items} callApi={setPageNum} />
+    </div>
+  );
 };
 
 export default TopRated;
