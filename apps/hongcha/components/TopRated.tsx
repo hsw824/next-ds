@@ -1,35 +1,33 @@
 import MovieList from './MovieList';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTopRated } from 'queries/useTopRated';
+import TopRatedResult from 'models/MovieInfoClass';
 
 const TopRated = () => {
-  // TODO: 페이지네이션 관련 처리는 임시 / 추후 캐로셀에서 관리
   const [pageNum, setPageNum] = useState(1);
+  const [items, setItems] = useState<TopRatedResult[]>([]);
 
-  const handlePrevPage = () => {
-    const prevPage = pageNum - 1;
-    if (prevPage <= 0) return;
-    setPageNum((prev) => prev - 1);
-  };
+  const {
+    isFetching,
+    isLoading,
+    data: { results },
+    error,
+  } = useTopRated(pageNum);
 
-  const handleNextPage = () => {
-    const nextPage = pageNum + 1;
-    if (nextPage > totalPages) return;
-    setPageNum((prev) => prev + 1);
-  };
-
-  const { isLoading, results, totalPages, error } = useTopRated(pageNum);
-
-  if (isLoading) return <div>로딩중</div>;
+  useEffect(() => {
+    if (!isFetching && results) {
+      setItems((prev) => [...prev, ...results]);
+    }
+  }, [isFetching]);
+  if (isLoading) return <div className="bg-red-600 text-white">리액트 쿼리 로딩중</div>;
   if (error) throw error;
 
   return (
-    <>
-      <MovieList results={results} />
-      <button onClick={handlePrevPage}>이전 페이지</button>
-      <button onClick={handleNextPage}>다음 페이지</button>
-    </>
+    <div>
+      {isFetching && <div className="bg-blue-600 text-white">리액트 쿼리 중간 로딩중</div>}
+      <MovieList results={items} callApi={setPageNum} />
+    </div>
   );
 };
 

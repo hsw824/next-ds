@@ -32,6 +32,7 @@ const ImageCard = ({ title, posterUrl, id }: ImageCardProps) => {
       <li
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        className="h-full"
         style={isMouseEnter ? { transform: 'scale(1.1)', margin: '0 20px' } : {}}
       >
         <ImageLoader src={posterUrl} width="200" />
